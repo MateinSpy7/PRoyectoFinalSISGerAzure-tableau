@@ -1,0 +1,10 @@
+{
+	"name": "adf-ucb-dw-subsidio-18af",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "chilecentral"
+}
