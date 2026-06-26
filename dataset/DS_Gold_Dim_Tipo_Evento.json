@@ -1,0 +1,37 @@
+{
+	"name": "DS_Gold_Dim_Tipo_Evento",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dw_subsidio",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ID_Tipo_Evento",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Categoria",
+				"type": "varchar"
+			},
+			{
+				"name": "Sub_Categoria",
+				"type": "varchar"
+			},
+			{
+				"name": "Sistema_Origen",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "gold",
+			"table": "Dim_Tipo_Evento"
+		}
+	}
+}

@@ -1,0 +1,132 @@
+{
+	"name": "DF_Silver_SEGIP_Personas",
+	"properties": {
+		"folder": {
+			"name": "bronze_to_silver/SEGIP"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Bronze_SEGIP_Personas",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_SEGIP_Personas",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ci as string,",
+				"          nombres as string,",
+				"          apellido_paterno as string,",
+				"          apellido_materno as string,",
+				"          fecha_nacimiento as string,",
+				"          genero as string,",
+				"          estado_civil as string,",
+				"          ci_conyuge as string,",
+				"          numero_hijos as string,",
+				"          ci_padre as string,",
+				"          ci_madre as string,",
+				"          profesion as string,",
+				"          nivel_estudios as string,",
+				"          municipio_residencia as string,",
+				"          fecha_emision as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 derive(nombres = upper(trim(nombres)),",
+				"          apellido_paterno = upper(trim(apellido_paterno)),",
+				"          municipio_residencia = upper(trim(iifNull(municipio_residencia, 'NO REGISTRADO'))),",
+				"          ci_conyuge = iifNull(ci_conyuge, 'SIN REGISTRO'),",
+				"          estado_civil = upper(trim(iifNull(estado_civil, 'SOLTERO'))),",
+				"          numero_hijos = toInteger(iifNull(numero_hijos, '0')),",
+				"          fecha_nacimiento = toDate(fecha_nacimiento, 'yyyy-MM-dd'),",
+				"          fecha_emision = toDate(fecha_emision, 'yyyy-MM-dd')) ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          ci,",
+				"          nombres,",
+				"          apellido_paterno,",
+				"          apellido_materno,",
+				"          fecha_nacimiento,",
+				"          genero,",
+				"          estado_civil,",
+				"          ci_conyuge,",
+				"          numero_hijos,",
+				"          ci_padre,",
+				"          ci_madre,",
+				"          profesion,",
+				"          nivel_estudios,",
+				"          municipio_residencia,",
+				"          fecha_emision",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ci as string,",
+				"          nombres as string,",
+				"          apellido_paterno as string,",
+				"          apellido_materno as string,",
+				"          fecha_nacimiento as date,",
+				"          genero as string,",
+				"          estado_civil as string,",
+				"          ci_conyuge as string,",
+				"          numero_hijos as integer,",
+				"          ci_padre as string,",
+				"          ci_madre as string,",
+				"          profesion as string,",
+				"          nivel_estudios as string,",
+				"          municipio_residencia as string,",
+				"          fecha_emision as date,",
+				"          fecha_carga as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ci,",
+				"          nombres,",
+				"          apellido_paterno,",
+				"          apellido_materno,",
+				"          fecha_nacimiento,",
+				"          genero,",
+				"          estado_civil,",
+				"          ci_conyuge,",
+				"          numero_hijos,",
+				"          ci_padre,",
+				"          ci_madre,",
+				"          profesion,",
+				"          nivel_estudios,",
+				"          municipio_residencia,",
+				"          fecha_emision",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

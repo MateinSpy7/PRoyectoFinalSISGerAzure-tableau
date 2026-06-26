@@ -1,0 +1,70 @@
+{
+	"name": "DS_Gold_Fact_Atencion_Clinica",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dw_subsidio",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ID_Hecho",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "FechaKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CI_Beneficiaria",
+				"type": "varchar"
+			},
+			{
+				"name": "ID_Establecimiento",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ID_Tipo_Evento",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Nro_Control",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Semana_Gestacion",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Peso_Registrado_Kg",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			},
+			{
+				"name": "Talla_Registrada_Cm",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			},
+			{
+				"name": "Resultado",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "gold",
+			"table": "Fact_Atencion_Clinica"
+		}
+	}
+}

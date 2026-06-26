@@ -1,0 +1,69 @@
+{
+	"name": "DS_Gold_Fact_Beneficios_Entregados",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dw_subsidio",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ID_Hecho",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "FechaKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CI_Beneficiaria",
+				"type": "varchar"
+			},
+			{
+				"name": "ID_Tipo_Evento",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ID_Paquete",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ID_Establecimiento",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Monto_Efectivo_Bs",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			},
+			{
+				"name": "Peso_Entregado_Kg",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			},
+			{
+				"name": "Lote_Produccion",
+				"type": "varchar"
+			},
+			{
+				"name": "Estado",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "gold",
+			"table": "Fact_Beneficios_Entregados"
+		}
+	}
+}

@@ -1,0 +1,385 @@
+{
+	"name": "DF_Gold_Fact_Atencion_Clinica",
+	"properties": {
+		"folder": {
+			"name": "silver_to_gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_BJA_ControlesPrenatales",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_BJA_Partos",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_BJA_ControlesPediatricos",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_SUP_Controles",
+						"type": "DatasetReference"
+					},
+					"name": "source4"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_BJA_Establecimientos",
+						"type": "DatasetReference"
+					},
+					"name": "source5"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Gold_Dim_Establecimiento",
+						"type": "DatasetReference"
+					},
+					"name": "source6"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Gold_Dim_Tipo_Evento",
+						"type": "DatasetReference"
+					},
+					"name": "source7"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Gold_Fact_Atencion_Clinica",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				},
+				{
+					"name": "derivedColumn4"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "lookup2"
+				},
+				{
+					"name": "select3"
+				},
+				{
+					"name": "lookup3"
+				},
+				{
+					"name": "select4"
+				},
+				{
+					"name": "lookup4"
+				},
+				{
+					"name": "select5"
+				},
+				{
+					"name": "union1"
+				},
+				{
+					"name": "lookup5"
+				},
+				{
+					"name": "lookup6"
+				},
+				{
+					"name": "select6"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          control_prenatal_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as integer,",
+				"          fecha_control as date,",
+				"          semana_gestacion as integer,",
+				"          peso_madre_kg as decimal(18,2),",
+				"          presion_arterial as string,",
+				"          resultado as string,",
+				"          fecha_carga as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source(output(",
+				"          parto_id as string,",
+				"          ci_madre as string,",
+				"          ci_recien_nacido as string,",
+				"          establecimiento_id as string,",
+				"          fecha_parto as date,",
+				"          tipo_parto as string,",
+				"          peso_nacimiento_kg as decimal(18,2),",
+				"          talla_nacimiento_cm as decimal(18,2),",
+				"          fecha_carga as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source(output(",
+				"          control_pediatrico_id as string,",
+				"          ci_nino as string,",
+				"          ci_madre as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as integer,",
+				"          fecha_control as date,",
+				"          peso_nino_kg as decimal(18,2),",
+				"          talla_nino_cm as decimal(18,2),",
+				"          vacuna_aplicada as string,",
+				"          resultado as string,",
+				"          fecha_carga as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source3",
+				"source(output(",
+				"          control_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          nro_control as integer,",
+				"          fecha_control as date,",
+				"          semana_gestacion as integer,",
+				"          peso_madre_kg as decimal(18,2),",
+				"          presion_arterial as string,",
+				"          fecha_carga as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source4",
+				"source(output(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string,",
+				"          fecha_carga as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source5",
+				"source(output(",
+				"          ID_Establecimiento as integer,",
+				"          Nombre_Establecimiento as string,",
+				"          Municipio as string,",
+				"          Departamento as string,",
+				"          Red_Salud as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source6",
+				"source(output(",
+				"          ID_Tipo_Evento as integer,",
+				"          Categoria as string,",
+				"          Sub_Categoria as string,",
+				"          Sistema_Origen as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source7",
+				"source1 derive(Categoria = 'Atencion Clinica',",
+				"          Sub_Categoria = 'Control Prenatal',",
+				"          Sistema_Origen = 'BJA',",
+				"          FechaKey = toInteger(toString(fecha_control, 'yyyyMMdd')),",
+				"          Talla_Registrada_Cm = toDecimal(null())) ~> derivedColumn1",
+				"source2 derive(Categoria = 'Atencion Clinica',",
+				"          Sub_Categoria = 'Parto',",
+				"          Sistema_Origen = 'BJA',",
+				"          FechaKey = toInteger(toString(fecha_parto, 'yyyyMMdd')),",
+				"          Nro_Control = toInteger(null()),",
+				"          Semana_Gestacion = toInteger(null())) ~> derivedColumn2",
+				"source3 derive(Categoria = 'Atencion Clinica',",
+				"          Sub_Categoria = 'Control Pediatrico',",
+				"          Sistema_Origen = 'BJA',",
+				"          FechaKey = toInteger(toString(fecha_control, 'yyyyMMdd')),",
+				"          Semana_Gestacion = toInteger(null())) ~> derivedColumn3",
+				"source4 derive(Categoria = 'Atencion Clinica',",
+				"          Sub_Categoria = 'Control Prenatal',",
+				"          Sistema_Origen = 'SUP',",
+				"          FechaKey = toInteger(toString(fecha_control, 'yyyyMMdd')),",
+				"          Talla_Registrada_Cm = toDecimal(null()),",
+				"          Resultado = 'NULL') ~> derivedColumn4",
+				"derivedColumn1 select(mapColumn(",
+				"          CI_Beneficiaria = ci_beneficiaria,",
+				"          establecimiento_id,",
+				"          Nro_Control = nro_control,",
+				"          Semana_Gestacion = semana_gestacion,",
+				"          Peso_Madre_Kg = peso_madre_kg,",
+				"          Resultado = resultado,",
+				"          Categoria,",
+				"          Sub_Categoria,",
+				"          Sistema_Origen,",
+				"          FechaKey,",
+				"          Talla_Registrada_Cm",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1, source5 lookup(select1@establecimiento_id == source5@establecimiento_id,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1 select(mapColumn(",
+				"          CI_Beneficiaria,",
+				"          Nro_Control,",
+				"          Semana_Gestacion,",
+				"          Peso_Registrado_Kg = Peso_Madre_Kg,",
+				"          Resultado,",
+				"          Categoria,",
+				"          Sub_Categoria,",
+				"          Sistema_Origen,",
+				"          FechaKey,",
+				"          Nombre_Establecimiento = nombre,",
+				"          Talla_Registrada_Cm",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"derivedColumn2, source5 lookup(source2@establecimiento_id == source5@establecimiento_id,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup2",
+				"lookup2 select(mapColumn(",
+				"          CI_Beneficiaria = ci_madre,",
+				"          Resultado = tipo_parto,",
+				"          Peso_Registrado_Kg = peso_nacimiento_kg,",
+				"          Talla_Registrada_Cm = talla_nacimiento_cm,",
+				"          Categoria,",
+				"          Sub_Categoria,",
+				"          Sistema_Origen,",
+				"          FechaKey,",
+				"          Nro_Control,",
+				"          Semana_Gestacion,",
+				"          Nombre_Establecimiento = nombre",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select3",
+				"derivedColumn3, source5 lookup(source3@establecimiento_id == source5@establecimiento_id,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup3",
+				"lookup3 select(mapColumn(",
+				"          CI_Beneficiaria = ci_madre,",
+				"          Nro_Control = nro_control,",
+				"          Peso_Registrado_Kg = peso_nino_kg,",
+				"          Talla_Registrada_Cm = talla_nino_cm,",
+				"          Resultado = resultado,",
+				"          Categoria,",
+				"          Sub_Categoria,",
+				"          Sistema_Origen,",
+				"          FechaKey,",
+				"          Nombre_Establecimiento = nombre,",
+				"          Semana_Gestacion",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select4",
+				"derivedColumn4, source5 lookup(source4@establecimiento_id == source5@establecimiento_id,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup4",
+				"lookup4 select(mapColumn(",
+				"          CI_Beneficiaria = ci_beneficiaria,",
+				"          Nro_Control = nro_control,",
+				"          Semana_Gestacion = semana_gestacion,",
+				"          Peso_Registrado_Kg = peso_madre_kg,",
+				"          Categoria,",
+				"          Sub_Categoria,",
+				"          Sistema_Origen,",
+				"          FechaKey,",
+				"          Nombre_Establecimiento = nombre,",
+				"          Talla_Registrada_Cm,",
+				"          Resultado",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select5",
+				"select2, select3, select4, select5 union(byName: true)~> union1",
+				"union1, source6 lookup(union1@Nombre_Establecimiento == source6@Nombre_Establecimiento,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup5",
+				"lookup5, source7 lookup(union1@Categoria == source7@Categoria",
+				"     && union1@Sub_Categoria == source7@Sub_Categoria",
+				"     && union1@Sistema_Origen == source7@Sistema_Origen,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup6",
+				"lookup6 select(mapColumn(",
+				"          CI_Beneficiaria,",
+				"          Nro_Control,",
+				"          Semana_Gestacion,",
+				"          Peso_Registrado_Kg,",
+				"          Resultado,",
+				"          FechaKey,",
+				"          Talla_Registrada_Cm,",
+				"          ID_Establecimiento,",
+				"          ID_Tipo_Evento",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select6",
+				"select6 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ID_Hecho as integer,",
+				"          FechaKey as integer,",
+				"          CI_Beneficiaria as string,",
+				"          ID_Establecimiento as integer,",
+				"          ID_Tipo_Evento as integer,",
+				"          Nro_Control as integer,",
+				"          Semana_Gestacion as integer,",
+				"          Peso_Registrado_Kg as decimal(10,2),",
+				"          Talla_Registrada_Cm as decimal(10,2),",
+				"          Resultado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

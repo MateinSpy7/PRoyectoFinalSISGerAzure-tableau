@@ -1,0 +1,37 @@
+{
+	"name": "DS_Gold_Dim_Paquete",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dw_subsidio",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ID_Paquete",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Peso_Estandar_Kg",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			},
+			{
+				"name": "Costo_Estimado_Bs",
+				"type": "decimal",
+				"precision": 10,
+				"scale": 2
+			}
+		],
+		"typeProperties": {
+			"schema": "gold",
+			"table": "Dim_Paquete"
+		}
+	}
+}

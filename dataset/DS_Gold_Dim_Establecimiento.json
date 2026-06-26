@@ -1,0 +1,41 @@
+{
+	"name": "DS_Gold_Dim_Establecimiento",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dw_subsidio",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ID_Establecimiento",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Nombre_Establecimiento",
+				"type": "varchar"
+			},
+			{
+				"name": "Municipio",
+				"type": "varchar"
+			},
+			{
+				"name": "Departamento",
+				"type": "varchar"
+			},
+			{
+				"name": "Red_Salud",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "gold",
+			"table": "Dim_Establecimiento"
+		}
+	}
+}

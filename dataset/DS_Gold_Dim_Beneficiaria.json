@@ -1,0 +1,53 @@
+{
+	"name": "DS_Gold_Dim_Beneficiaria",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dw_subsidio",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "gold"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "CI_Beneficiaria",
+				"type": "varchar"
+			},
+			{
+				"name": "Nombres",
+				"type": "varchar"
+			},
+			{
+				"name": "Apellido_Paterno",
+				"type": "varchar"
+			},
+			{
+				"name": "Apellido_Materno",
+				"type": "varchar"
+			},
+			{
+				"name": "Fecha_Nacimiento",
+				"type": "date"
+			},
+			{
+				"name": "Estado_Civil",
+				"type": "varchar"
+			},
+			{
+				"name": "Municipio_Residencia",
+				"type": "varchar"
+			},
+			{
+				"name": "Numero_Hijos",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "gold",
+			"table": "Dim_Beneficiaria"
+		}
+	}
+}

@@ -1,0 +1,101 @@
+{
+	"name": "DF_Gold_Dim_Beneficiaria",
+	"properties": {
+		"folder": {
+			"name": "silver_to_gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_SEGIP_Personas",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Gold_Dim_Beneficiaria",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ci as string,",
+				"          nombres as string,",
+				"          apellido_paterno as string,",
+				"          apellido_materno as string,",
+				"          fecha_nacimiento as date,",
+				"          genero as string,",
+				"          estado_civil as string,",
+				"          ci_conyuge as string,",
+				"          numero_hijos as integer,",
+				"          ci_padre as string,",
+				"          ci_madre as string,",
+				"          profesion as string,",
+				"          nivel_estudios as string,",
+				"          municipio_residencia as string,",
+				"          fecha_emision as date,",
+				"          fecha_carga as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 select(mapColumn(",
+				"          CI_Beneficiaria = ci,",
+				"          nombres,",
+				"          apellido_paterno,",
+				"          apellido_materno,",
+				"          fecha_nacimiento,",
+				"          estado_civil,",
+				"          municipio_residencia,",
+				"          numero_hijos",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          CI_Beneficiaria as string,",
+				"          Nombres as string,",
+				"          Apellido_Paterno as string,",
+				"          Apellido_Materno as string,",
+				"          Fecha_Nacimiento as date,",
+				"          Estado_Civil as string,",
+				"          Municipio_Residencia as string,",
+				"          Numero_Hijos as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          CI_Beneficiaria,",
+				"          Nombres = nombres,",
+				"          Apellido_Paterno = apellido_paterno,",
+				"          Apellido_Materno = apellido_materno,",
+				"          Fecha_Nacimiento = fecha_nacimiento,",
+				"          Estado_Civil = estado_civil,",
+				"          Municipio_Residencia = municipio_residencia,",
+				"          Numero_Hijos = numero_hijos",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

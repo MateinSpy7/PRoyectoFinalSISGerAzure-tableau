@@ -1,0 +1,181 @@
+{
+	"name": "DF_Gold_Fact_Beneficios_Entregados",
+	"properties": {
+		"folder": {
+			"name": "silver_to_gold"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_BJA_Pagos",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_SUP_Entregas",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Silver_SUP_Establecimientos",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Gold_Fact_Beneficios_Entregados",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "union1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          pago_id as string,",
+				"          ci_beneficiaria as string,",
+				"          concepto_pago as string,",
+				"          monto_bs as decimal(18,2),",
+				"          fecha_pago as date,",
+				"          estado_pago as string,",
+				"          canal_pago as string,",
+				"          nro_comprobante as string,",
+				"          fecha_carga as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source(output(",
+				"          entrega_id as string,",
+				"          boleta_id as string,",
+				"          ci_beneficiaria as string,",
+				"          establecimiento_id as string,",
+				"          paquete_id as string,",
+				"          paquete_nombre as string,",
+				"          fecha_entrega as date,",
+				"          lote_produccion as string,",
+				"          peso_paquete_kg as decimal(18,2),",
+				"          fecha_proxima_entrega as date,",
+				"          fecha_carga as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source(output(",
+				"          establecimiento_id as string,",
+				"          codigo_snis as string,",
+				"          nombre as string,",
+				"          tipo as string,",
+				"          nivel_atencion as string,",
+				"          municipio as string,",
+				"          departamento as string,",
+				"          red_salud as string,",
+				"          estado as string,",
+				"          fecha_carga as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source3",
+				"source1 derive(Categoria = 'Entrega Beneficio',",
+				"          Sub_Categoria = 'Pago Efectivo',",
+				"          Sistema_Origen = 'BJA',",
+				"          FechaKey = toInteger(toString(fecha_pago, 'yyyyMMdd')),",
+				"          Peso_Entregado_Kg = toDecimal(null()),",
+				"          Lote_Produccion = toString(null()),",
+				"          Nombre_Establecimiento = toString(null())) ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          CI_Beneficiaria = ci_beneficiaria,",
+				"          Monto_Efectivo_Bs = monto_bs,",
+				"          Estado = estado_pago,",
+				"          Categoria,",
+				"          Sub_Categoria,",
+				"          Sistema_Origen,",
+				"          FechaKey,",
+				"          Peso_Entregado_Kg,",
+				"          Lote_Produccion,",
+				"          Nombre_Establecimiento",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source2 derive(Categoria = 'Entrega Beneficio',",
+				"          Sub_Categoria = 'Entrega Paquete',",
+				"          Sistema_Origen = 'SUP',",
+				"          FechaKey = toInteger(toString(fecha_entrega, 'yyyyMMdd')),",
+				"          Monto_Efecivo_Bs = toDecimal(null()),",
+				"          Estado = 'NULL') ~> derivedColumn2",
+				"lookup1 select(mapColumn(",
+				"          CI_Beneficiaria = ci_beneficiaria,",
+				"          Lote_Produccion = lote_produccion,",
+				"          Peso_Entregado_Kg = peso_paquete_kg,",
+				"          Categoria,",
+				"          Sub_Categoria,",
+				"          Sistema_Origen,",
+				"          FechaKey,",
+				"          Monto_Efectivo_Bs = Monto_Efecivo_Bs,",
+				"          Nombre_Establecimiento = nombre,",
+				"          Estado = source3@estado",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"derivedColumn2, source3 lookup(source2@establecimiento_id == source3@establecimiento_id,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"select1, select2 union(byName: true)~> union1",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ID_Hecho as integer,",
+				"          FechaKey as integer,",
+				"          CI_Beneficiaria as string,",
+				"          ID_Tipo_Evento as integer,",
+				"          ID_Paquete as integer,",
+				"          ID_Establecimiento as integer,",
+				"          Monto_Efectivo_Bs as decimal(10,2),",
+				"          Peso_Entregado_Kg as decimal(10,2),",
+				"          Lote_Produccion as string,",
+				"          Estado as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}
